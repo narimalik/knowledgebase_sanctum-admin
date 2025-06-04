@@ -27,7 +27,7 @@
           <div class="container-fluid">
             <!--begin::Row-->
             <div class="row">
-              <div class="col-12">
+              <div class="col-6">
                 <!-- Default box -->
                 <div class="card">
                   <div class="card-header">
@@ -54,48 +54,78 @@
                   </div>
                   <div class="card-body">
 
-                   
 
-                  <form method="post" action="{{ url('category-save') }}">
+                  @if ($errors->any())
+                      <div class="alert alert-danger">
+                          <ul>
+                              @foreach ($errors->all() as $error)
+                                  <li>{{ $error }}</li>
+                              @endforeach
+                          </ul>
+                      </div>
+                  @endif
+
+
+                  @if(session('success'))
+                      <div class="alert alert-success">
+                          {{ session('success') }}
+                      </div>
+                  @endif
+                                
+
+                  <form method="post" action="{{ url($url) }}">
                     @csrf
+
+                   @if(isset( $cateogry_detail->id  ))
+                    <input type="hidden" name="id" value="{{ $cateogry_detail->id }}" >
+                   @endif
+
+
                     <!--begin::Body-->
                     <div class="card-body">
+
+                   
+
                       <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Category Name</label>
-                        <input type="name" name="category_name" class="form-control" id="category_name" aria-describedby="emailHelp">
                         
-                        <!-- <div id="emailHelp" class="form-text">
-                          We'll never share your email with anyone else.
-                        </div> -->
+                        <label for="exampleInputEmail1" class="form-label">Category Name</label>
+                        <input type="name" name="category_name" class="form-control"  value="{{ old('category_name', $cateogry_detail->category_name ?? '') }}"  id="category_name" >
+                                             
                       </div>
                       
                       <div class="mb-3">
                         <div class="input-group">
                         <span class="input-group-text">Category Detail</span>
-                        <textarea class="form-control" name="category_detail" id="category_detail" aria-label="With textarea"></textarea>
+                        <textarea class="form-control" name="category_detail" id="category_detail" aria-label="With textarea">{{ old('category_detail', $cateogry_detail->category_short_detail ?? '') }}</textarea>
                         </div>
                       </div>
 
                     
 
-                      <div class="mb-3 form-check">
-                      <label for="exampleInputEmail1" class="form-label">Category Name</label>
-                        <span class="list_of_checkboxs" >
-                            <input type="checkbox" value="val1" name="paraent_category[]">
-                            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                      <div class="mb-3 ">
+                      <label for="exampleInputEmail1" class="form-label">Parent Category </label>
+                        <span class="list_of_checkboxs" >                         
+                            <select class="form-select" name="paraent_category" id="paraent_category" >
+                             <option value="0">-- Select --</option>
+                              @foreach($categories as $i=>$v)  
+                              <option {{ isset($cateogry_detail) && $cateogry_detail->parent_category_id == $i ? 'selected': '' }} value="{{ $i }}">{{ $v }}</option>
+                              @endforeach
+                            </select>
                         </span>
-
-                        <span class="list_of_checkboxs" >
-                            <input type="checkbox" value="val2"  name="paraent_category[]">
-                            <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                        </span>
-
-                        <span class="list_of_checkboxs" >
-                            <input type="checkbox" value="val3"  name="paraent_category[]">
-                            <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                        </span>
-                        
                       </div>
+
+
+                      <div class="mb-3 ">
+                      <label for="exampleInputEmail1" class="form-label">Category Status</label>
+                        <span class="list_of_checkboxs" >                            
+                            <select class="form-select" name="status" id="status" >
+                            @foreach($status as $i=>$v)  
+                            <option  {{ isset($cateogry_detail) && $cateogry_detail->status==$i ? 'selected' : '' }} value="{{ $i }}">{{ $v }}</option>
+                            @endforeach
+                            </select>
+                        </span>
+                      </div>
+
                     </div>
                     <!--end::Body-->
                     <!--begin::Footer-->
@@ -117,6 +147,9 @@
                   <!-- /.card-footer-->
                 </div>
                 <!-- /.card -->
+              </div>
+
+              <div class="col-6">
               </div>
             </div>
             <!--end::Row-->

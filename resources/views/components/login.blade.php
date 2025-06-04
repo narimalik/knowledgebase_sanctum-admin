@@ -1,5 +1,8 @@
 @extends('components.layout.auth')
 
+@section('pageTitle')
+Admin Login Page
+@endSection
 
 @section('authcontent')
 <div class="login-box">

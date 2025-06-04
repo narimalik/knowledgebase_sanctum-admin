@@ -39,7 +39,7 @@ class UserController extends Controller
         if(Auth::attempt($user_credentials)){
             
             $request->session()->regenerate();
-            return redirect()->route('category');
+            return redirect()->route('dashboard');
             
         //     $user = Auth::user();
             

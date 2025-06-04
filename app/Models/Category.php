@@ -13,10 +13,23 @@ class Category extends Model
 
     protected $fillable = [
         'category_name',
+        'category_short_detail',
+        'parent_category_id',
         'added_by',
         'updated_by',
         
     ];
+
+    public function parent()
+    {
+        return $this->belongsTo(Category::class, "parent_category_id");
+    }
+
+
+    public function children()
+    {
+        return $this->belongsTo(Category::class, "parent_category_id");
+    }
 
     public function articles()
     {

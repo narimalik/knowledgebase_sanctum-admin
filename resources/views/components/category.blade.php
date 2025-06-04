@@ -53,7 +53,57 @@
                     </div>
                   </div>
                   <div class="card-body">
-                    Start creating your amazing application!
+
+
+
+                  <table id="categorylist" class="display">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Parent</th>
+                <th>Details</th>
+                <th>Action</th>
+              
+            </tr>
+        </thead>
+        <tbody>
+
+
+        @foreach( $data  as $category)        
+          <tr>
+              <td>{{ $category->category_name }}</td>
+              <td>{{ $category->parent ? $category->parent->category_name : 'NA' }}</td>
+              <td>{{ $category->category_short_detail	 }}</td>
+              <td>
+                <span class="badge text-bg-success"> <i class="nav-icon bi bi-list"></i> See Articles</span>              
+                <a href="{{ url('category/edit/'.$category->id) }}"><span class="badge text-bg-warning"> <i class="nav-icon bi bi-pen"></i>  Edit</span></a>
+                <span class="badge text-bg-danger"> <i class="nav-icon bi-trash"></i> Delete</span>
+              </td>
+              
+          </tr>
+
+         
+
+
+          
+        @endforeach
+
+        </tbody>
+        <!-- <tfoot>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Age</th>
+                <th>Start date</th>
+                <th>Salary</th>
+            </tr>
+        </tfoot> -->
+    </table>
+                    
+
+
+
                     
                 </div>
                   <!-- /.card-body -->
@@ -70,3 +120,5 @@
         <!--end::App Content-->
       </main>
 @endsection      
+
+

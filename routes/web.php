@@ -35,19 +35,24 @@ Route::post ('/register', [UserController::class, 'register'])->name('register')
 
 Route::middleware(['auth'])->group(function(){
 
+    Route::get('dashboard', function(){        
+        return view('components.dashboard');
+    })->name('dashboard');
 
 
-    Route::get('add-category', function(){
-        
-        return view('components.add-category');
-    });
+    Route::get('add-category',[CategoryController::class,"create"])->name("add-category");
 
 
 
-    Route::get('category', function(){
-        
-        return view('components.category');
-    })->name('category');
+    // Route::get('category', function(){        
+    //     return view('components.category');
+    // })->name('category');
+
+    Route::get('category', [CategoryController::class,'index'])->name("category");
+
+    Route::get('category/edit/{id}', [CategoryController::class,'edit']);
+    Route::post('category-update', [CategoryController::class,"update"])->name("category-update");
+    
 
 
   
