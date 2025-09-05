@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
+use App\Models\Article;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -53,11 +55,26 @@ Route::middleware(['auth'])->group(function(){
     Route::get('category/edit/{id}', [CategoryController::class,'edit']);
     Route::post('category-update', [CategoryController::class,"update"])->name("category-update");
     
-
-
-  
+    Route::get('category/delete/{id}', [CategoryController::class,'destroy']);
 
     Route::post('category-save', [CategoryController::class,"store"]);
+
+
+
+    #Articles
+    Route::get('articles', [ArticleController::class,'index'])->name("article");
+    Route::get('add-article',[ArticleController::class,"create"])->name("add-article");
+    Route::post('article-save', [ArticleController::class,"store"]);    
+
+    Route::get('article/edit/{id}', [ArticleController::class,'edit'])->name("edit-article");
+
+    Route::post('article-update', [ArticleController::class,"update"]);  
+
+    Route::get('article/delete/{id}', [ArticleController::class,'destroy']);
+
+    //Upload image for editor
+    Route::post('upload', [ArticleController::class,'upload'])->name('upload');
+    
 
     Route::get('logout',[UserController::class,'logout']);
 

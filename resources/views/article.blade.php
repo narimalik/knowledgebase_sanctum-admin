@@ -1,6 +1,11 @@
 @extends('components.layout.master')
 
 @section('content')
+
+@php
+use Illuminate\Support\Str;
+@endphp
+
 <main class="app-main">
         <!--begin::App Content Header-->
         <div class="app-content-header">
@@ -8,11 +13,11 @@
           <div class="container-fluid">
             <!--begin::Row-->
             <div class="row">
-              <div class="col-sm-6"><h3 class="mb-0">Category</h3></div>
+              <div class="col-sm-6"><h3 class="mb-0">Articles</h3></div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                 <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page"><a href=" {{ url('add-category') }} ">Add New Category</a></li>
+                  <li class="breadcrumb-item active" aria-current="page"><a href=" {{ url('add-article') }} ">Add New Article</a></li>
                 </ol>
               </div>
             </div>
@@ -31,7 +36,7 @@
                 <!-- Default box -->
                 <div class="card">
                   <div class="card-header">
-                    <h3 class="card-title">Category List</h3>
+                    <h3 class="card-title">Article List</h3>
                     <div class="card-tools">
                       <button
                         type="button"
@@ -75,8 +80,9 @@
                   <table id="categorylist" class="display">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Parent</th>
+                        <th>Article Title</th>
+                        <th>Sub Heading</th>
+                        <th>Categories</th>
                         <th>Details</th>
                         <th>Action</th>
                       
@@ -85,23 +91,31 @@
         <tbody>
 
 
-        @foreach( $data  as $category)        
+        @foreach( $articles  as $article)        
           <tr>
-              <td>{{ $category->category_name }}</td>
-              <td>{{ $category->parent ? $category->parent->category_name : 'NA' }}</td>
-              <td>{{ $category->category_short_detail	 }}</td>
+              <td>{{ $article->article_title }}</td>
+              <td>{{ $article->article_sub_title ? $article->article_sub_title : 'NA' }}</td>
               <td>
-                <span class="badge text-bg-success"> <i class="nav-icon bi bi-list"></i> See Articles</span>              
-                <a href="{{ url('category/edit/'.$category->id) }}"><span class="badge text-bg-warning"> <i class="nav-icon bi bi-pen"></i>  Edit</span></a>
-                <a href="{{ url('category/delete/'.$category->id) }}" onclick=" return confirm('You want to delete this category!')"><span class="badge text-bg-danger"> <i class="nav-icon bi-trash"></i> Delete</span></a>
+                @php
+                  $categories_list = [];
+
+                  foreach( $article->categories  as $categories)
+                  { 
+                    $categories_list[] = $categories->category_name ;
+                  }
+                
+                @endphp
+
+                  {{ implode(" , ", $categories_list)  }}
+              </td>
+              <td width="30%">{!! Str::words($article->detail, 20, '...')  !!}</td> <!-- Protect your application from XSS (Cross-Site Scripting) attacks.-->
+              <td>
+                <a href="{{ url('article/edit/'.$article->id) }}"><span class="badge text-bg-warning"> <i class="nav-icon bi bi-pen"></i>  Edit</span></a>
+                <a href="{{ url('article/delete/'.$article ->id) }}" onclick=" return confirm('You want to delete this article!')"><span class="badge text-bg-danger"> <i class="nav-icon bi-trash"></i> Delete</span></a>
               </td>
               
           </tr>
 
-         
-
-
-          
         @endforeach
 
         </tbody>

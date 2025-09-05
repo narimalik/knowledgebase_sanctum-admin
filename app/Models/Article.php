@@ -13,6 +13,7 @@ class Article extends Model
         'article_title',
         'article_sub_title',
         'detail',
+        'status',
         'added_by',
         'updated_by',
     ];

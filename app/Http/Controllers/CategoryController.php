@@ -205,24 +205,18 @@ class CategoryController extends Controller
         DB::beginTransaction();
         try{
             $category = Category::find($id);
-            $this->authorize("delete", $category);
+          #  $this->authorize("delete", $category);
             
             $category->delete();
             DB::commit();
-            return response([
-                "message"=>"Category Deleted Sucessfully",
-            ],
-            200);
+            return redirect()->back()->with(['success'=> "Category has been Deleted!" ]);
+
 
         }
         //catch( AuthorizationException $e ){ echo $e->getMessage(); }
         catch(Throwable $exception){
             DB::rollback();            
-            return response([
-                "message"=> $exception->getMessage(),
-                ],
-                500
-            );
+            return redirect()->back()->withErrors(['Error'=> $exception->getMessage() ]);
         }
         
 

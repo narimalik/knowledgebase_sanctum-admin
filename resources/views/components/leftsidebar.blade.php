@@ -83,6 +83,13 @@
               </li>
 
 
+              <li>
+              <a href="{{ url('/articles') }}">
+              <span class="brand-text fw-light">Articles</span>              
+              </a>
+              </li>
+
+
               <li class="nav-header">Other pages</li>
               <li class="nav-item">
                 <a href="../docs/introduction.html" class="nav-link">
