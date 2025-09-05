@@ -60,7 +60,7 @@
               
               <li>
               <a href="{{ url('/category') }}">
-              <span class="brand-text fw-light">Catgories</span>              
+              <span class="brand-text fw-light">Catgories2</span>              
               </a>
               </li>
               <li class="nav-item">
