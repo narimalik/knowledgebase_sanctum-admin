@@ -60,7 +60,7 @@ class CategoryController extends Controller
     public function create()
     {
         //
-        return view("addcategory")->with(["url"=>"category-save"]);
+        return view("addcategory")->with( [ "url"=>"category-save" ] );
     }
 
     /**
