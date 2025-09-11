@@ -60,7 +60,7 @@ class CategoryController extends Controller
     public function create()
     {
         //
-        return view("addcategory");
+        return view("addcategory")->with(["url"=>"category-save"]);
     }
 
     /**
@@ -109,13 +109,7 @@ class CategoryController extends Controller
     public function show(string $id)
     {
         
-        //
-        // return response([
-        //     "message"=> "In category show()",
-        //     ],
-        //     500
-        // );
-        // exit;
+      
         $categories = Category::with(['articles'])->where("id",$id)->get();           
         return  CategoryResource::collection($categories);
 
