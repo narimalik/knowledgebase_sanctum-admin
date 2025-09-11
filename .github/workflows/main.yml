@@ -1,15 +1,19 @@
-name: upload files to Live server through FTP
+name: upload files to cpanel
 on:
   push:
     branches:
       - main
 jobs:
   FTP-deploy-action:
-    name: FTP-deploy-action
+    name: FTP-Deploy-Action
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.1.0
-        with:
-         server: ${{ secrets.FTP_SERVER}}
-         username: ${{ secrets.FTP_USERNAME}}
-         password: ${{ secrets.FTP_PASSWORD}}
+    - uses: actions/checkout@v2.1.0
+      with:
+        fetch-depth: 2
+    - name: FTP-Deploy-Action
+      uses: Samkirkland/FTP-Deploy-Action@4.0.0
+      with:
+        server: ${{ secrets.FTP_SERVER}}
+        username: ${{ secrets.FTP_USERNAME}}
+        password: ${{ secrets.FTP_PASSWORD}}
