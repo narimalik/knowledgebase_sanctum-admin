@@ -73,7 +73,7 @@
                   @endif
                                 
 
-                  <form method="post" action="{{ url($url) }}">
+                  <form method="post" action="{{ url( '') }}">
                     @csrf
 
                    @if(isset( $cateogry_detail->id  ))
