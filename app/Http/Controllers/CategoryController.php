@@ -59,8 +59,11 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
-        return view("addcategory")->with( [ "url"=>"category-save" ] );
+        $status = [1 =>'Active', 0 => 'inActive'  ];
+        $categories_table = Category::all()->toArray();
+        $categories = array_combine( array_column($categories_table,'id') , array_column($categories_table,'category_name'));
+        
+        return view("addcategory")->with( [  "categories" => $categories, "status" => $status , 'url' => 'category-save']  );
     }
 
     /**
