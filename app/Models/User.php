@@ -60,4 +60,9 @@ class User extends Authenticatable
         return $this->hasMany(Category::class, "added_by", "id");
     }
 
+    public function role(){
+            return $this->belongsToMany(Role::class, "role_user","user", "role");
+    }
+
+
 }

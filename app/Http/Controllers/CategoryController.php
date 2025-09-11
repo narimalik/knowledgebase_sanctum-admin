@@ -79,6 +79,7 @@ class CategoryController extends Controller
                 'category_name' => $request->category_name,
                 'category_short_detail' => $request->category_detail,
                 'parent_category_id' => $request->paraent_category,
+                'category_icon_css' => $request->category_icon_css,
                 'added_by' => Auth::user()->id,
                 'updated_by'=>Auth::user()->id,
             ]);
@@ -180,6 +181,7 @@ class CategoryController extends Controller
 
                 $cateogry->category_short_detail = $request->category_detail;
                 $cateogry->parent_category_id = $request->paraent_category;
+                $cateogry->category_icon_css = $request->category_icon_css;
                 $cateogry->status = $request->status;
 
                 $cateogry->updated_by=Auth::user()->id;

@@ -180,7 +180,7 @@ class ArticleController extends Controller
 
             $article->article_title = $request->article_title;
             $article->article_sub_title = $request->article_sub_title;
-            $article->detail = trim( strip_tags($request->detail) );
+            $article->detail = $request->detail;
             $article->status = $request->status;
 
             $article->updated_by=Auth::user()->id;

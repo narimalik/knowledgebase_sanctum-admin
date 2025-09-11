@@ -115,8 +115,8 @@
                     
 
                       <div class="mb-3 ">
-                      <label for="exampleInputEmail1" class="form-label">Description </label>
-                      <textarea class="form-control" name="detail" id="detail" aria-label="With textarea">{{ old('detail', $article_detail->detail ?? '') }}</textarea>
+                      <label for="exampleInputEmail1" class="form-label">Description </label> 
+                      <textarea class="form-control" name="detail" id="detail" aria-label="With textarea">{!! old('detail', $article_detail->detail ?? '') !!}</textarea>
                       </div>
 
 
@@ -183,15 +183,79 @@
     
 
       <script src="https://cdn.ckeditor.com/ckeditor5/35.1.0/classic/ckeditor.js"></script>
+
+      <!--  <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script> -->
+      
+          
+<!-- T3st_tiny# -->
+ 
     <script>
-    ClassicEditor.create(document.querySelector('#description'), {
-    ckfinder: {
-       uploadUrl: '{{ route('upload', ['_token' => csrf_token()]) }}'
-    }
-    })
-    .catch(error => {
-    console.error(error);
-    });
-    </script>
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  /*
+      ClassicEditor.create(document.querySelector('#detail'), {
+        ckfinder: {
+          uploadUrl: "{{ route('upload', ['_token' => csrf_token()]) }}"
+        }       
+        ,toolbar: [
+            'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 
+            '|', 'blockQuote', 'insertTable', 'codeBlock', 'undo', 'redo'
+            ,'|','link', 'unlink', 'imageUpload', 'mediaEmbed'
+            ,'|','code', 'codeBlock'
+        ]
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
+      console.log(ClassicEditor.builtinPlugins.map(p => p.pluginName));
+*/
+
+
+      
+    // 
+
+
+    tinymce.init({
+    selector: '#detail',  // change this value according to your HTML
+    plugins: 'a_tinymce_plugin',
+    a_plugin_option: true,
+    a_configuration_option: 400,
+
+    plugins: ['codesample', 'code'], // code= to see source code, codesample=to add code snipts.
+    valid_elements: '*[*]',
+    extended_valid_elements: '*[*]',
+    toolbar: 'undo redo | bold italic underline | code | codesample ',
+  forced_root_block: false,
+
+  valid_children: '+body[style],pre[code]',
+
+  license_key: 'gpl'   // Its important to include for free version.
+
+  // apiKey: '4xv01v0utnwvff9jjtwb3upsv44w615mhs0szw4akw90z8tx',
+
+  // Configure the code sample languages
+  , codesample_languages: [
+    {text: 'PHP', value: 'php'},
+    {text: 'JavaScript', value: 'javascript'},
+    {text: 'HTML/XML', value: 'markup'},
+    {text: 'CSS', value: 'css'},
+    {text: 'Python', value: 'python'}
+  ],
+
+
+  });
+
+
+    // 
+
+  });
+
+
+</script>
+
 
 @endsection      

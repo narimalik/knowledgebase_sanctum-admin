@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('category_name')->nullable(false);
             $table->string('category_short_detail')->nullable(true);
             $table->integer('parent_category_id')->default(0);
+            $table->string('category_icon_css')->nullable(true);
             $table->integer('added_by');
             $table->integer('updated_by');
             $table->tinyInteger('status')->default(0);

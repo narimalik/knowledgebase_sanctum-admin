@@ -88,9 +88,6 @@
                   <form method="post" action="{{ url('article-save') }}">
                     @csrf
 
-                  
-
-
                     <!--begin::Body-->
                     <div class="card-body">
 
@@ -106,7 +103,7 @@
                       <div class="mb-3">
                         <div class="input-group">
                         <span class="input-group-text">Article Sub-title</span>
-                        <textarea class="form-control" name="article_sub_title" id="article_sub_title" aria-label="With textarea">{{ old('category_detail', $cateogry_detail->category_short_detail ?? '') }}</textarea>
+                        <textarea class="form-control" name="article_sub_title" id="article_sub_title" aria-label="With textarea">{{ old('article_sub_title', $cateogry_detail->article_sub_title ?? '') }}</textarea>
                         </div>
                       </div>
 

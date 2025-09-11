@@ -74,7 +74,21 @@ Route::middleware(['auth'])->group(function(){
 
     //Upload image for editor
     Route::post('upload', [ArticleController::class,'upload'])->name('upload');
+
+
+    //Create new User
+
+    Route::get("userregisteration", [UserController::class, 'showRegisteration'])->name('userregisteration');
+    Route::post("adduser", [UserController::class, "register"])->name("adduser");
+
+    Route::get("usersList", [UserController::class, 'usersList'])->name('usersList');
+
+    Route::get("user/edit/{id}", [UserController::class, 'editUser'])->name('editUser');
+
+    Route::post('user-update', [UserController::class,"userupdate"]);  
+
     
+    Route::get('user/delete/{id}', [UserController::class,'destroy']);    
 
     Route::get('logout',[UserController::class,'logout']);
 

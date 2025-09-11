@@ -1,3 +1,7 @@
+@php
+  use App\Libraries\CategoryCommons;
+@endphp
+
 <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
         <!--begin::Sidebar Brand-->
         <div class="sidebar-brand">
@@ -59,17 +63,37 @@
               </li> -->
               
               <li>
-              <a href="{{ url('/category') }}">
-              <span class="brand-text fw-light">Catgories2</span>              
-              </a>
-              </li>
-              <li class="nav-item">
-                <a href="../docs/introduction.html" class="nav-link">
-                  <i class="nav-icon bi bi-download"></i>
-                  <p>Java</p>
+                <a href="{{ url('/category') }}">
+                <span class="brand-text fw-light">Catgories</span>              
                 </a>
               </li>
               <li class="nav-item">
+                @php
+                
+                $categories_list = CategoryCommons::getCategories();
+                
+                foreach($categories_list as $category)
+                {
+                
+                
+                  @endphp
+                  <a href="../docs/introduction.html" class="nav-link">
+                    <i class="nav-icon  {{ $category->category_icon_css ?? '' }} "></i>
+                    <p>{{ $category->category_name }}</p>
+                  </a>
+
+                @php
+                  }
+                @endphp
+              </li>
+
+              <li>
+                <a href="{{ url('/usersList') }}">
+                  <span class="brand-text fw-light">Users</span>              
+                </a>
+              </li>
+
+              <!-- <li class="nav-item">
                 <a href="../docs/layout.html" class="nav-link">
                   <i class="nav-icon bi bi-grip-horizontal"></i>
                   <p>Python</p>
@@ -80,13 +104,13 @@
                   <i class="nav-icon bi bi-star-half"></i>
                   <p>PHP</p>
                 </a>
-              </li>
+              </li> -->
 
 
               <li>
-              <a href="{{ url('/articles') }}">
-              <span class="brand-text fw-light">Articles</span>              
-              </a>
+                <a href="{{ url('/articles') }}">
+                <span class="brand-text fw-light">Articles</span>              
+                </a>
               </li>
 
 
@@ -120,3 +144,4 @@
         </div>
         <!--end::Sidebar Wrapper-->
       </aside>
+

@@ -98,6 +98,8 @@
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
     <script src="{{ asset('assets/js/adminlte.js') }}"></script>
 
+    <script src="{{ asset('vendor/tinymce/tinymce.min.js') }}"></script>
+
     
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>

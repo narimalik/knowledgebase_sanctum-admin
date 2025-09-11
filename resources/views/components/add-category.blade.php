@@ -115,6 +115,16 @@
                       </div>
 
 
+
+                      
+                      <div class="mb-3">
+                        
+                        <label for="exampleInputEmail1" class="form-label">Category Icon CSS</label>
+                        <input type="name" name="category_icon_css" class="form-control"  value="{{ old('category_icon_css', $cateogry_detail->category_icon_css ?? '') }}"  id="category_icon_css" >
+                                             
+                      </div>
+
+
                       <div class="mb-3 ">
                       <label for="exampleInputEmail1" class="form-label">Category Status</label>
                         <span class="list_of_checkboxs" >                            

@@ -15,8 +15,10 @@ use App\Events\RegisteredUser;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Jobs\SendRegisteredEmailjob;
-
+use App\Models\Role;
 use App\Traits\Utilities;
+use Illuminate\Validation\Rule;
+use DB;
 
 class UserController extends Controller
 {
@@ -70,16 +72,82 @@ class UserController extends Controller
 
     }
 
+    public function showRegisteration(Request $request)
+    {
+        $roles = Role::all();
+        return view("add-new-user")->with(["status"=>array( 1=> "Active",  0=>"inActive"), "roles"=>$roles ]);
+    }
+
+
+
+
+    public function editUser(string $id)
+    {   
+        $users = User::where("id", $id)->with("role")->first();
+        
+        $roles_list = Role::all();
+        
+        $roles = $users->role->toArray();
+        $roles_currently_assigned =  array_column($roles,"id");
+
+        return view("edit-new-user")->with(["users"=> $users, "status"=>array( 1=> "Active",  0=>"inActive") , "roles" => $roles, "roles_currently_assigned"=>$roles_currently_assigned, "roles_list"=>$roles_list ]);
+
+    }   
+
+
+public function userupdate( Request $request )
+{
+
+    DB::beginTransaction();
+    try{
+
+        $user = User::find($request->id);
+
+      
+        
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],            
+            
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('users')->ignore($request->id) ],
+            
+        ]);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+       
+        $user->status = $request->status;
+
+        # $user->updated_by=Auth::user()->id;
+        
+        $user->save();
+
+
+        $roles = $request->roles;
+        $user->role()->sync($roles);
+
+        DB::commit();
+
+       return redirect()->back()->with(['success'=> "User has been Updated" ]);
+
+
+    }catch(Throwable $exception){
+        DB::rollback();
+        return redirect()->back()->withErrors(['Error'=> $exception->getMessage() ]);
+    }
+
+}
+
+    
+    
+
 
 public function register(Request $request)
     {
-
         
         $request->validate([
             'name' => ['required', 'string', 'max:255'],            
             'username' => ['required', 'string', 'max:255','alpha_dash', 'unique:'.User::class],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -90,22 +158,28 @@ public function register(Request $request)
             'password' => Hash::make($request->password),
         ]);
 
+        $roles = $request->roles;
+        $user->role()->sync($roles);
+
+        #$categories = $request->categories;
+        #$article->categories()->sync($categories);
+
        // event(new Registered($user));
 
         Auth::login($user);
-
         // $token = $user->createToken($request->email)->plainTextToken;  // If you need token
-
          ## Create job to Send Welcom email         
-         SendRegisteredEmailjob::dispatch($user);
-         
-
+        //  SendRegisteredEmailjob::dispatch($user);    //      
         
-        return response([
-            "token"=>$token,
-            "user"=>$user
-        ]);
+        return redirect()->back()->with(['success'=> "User Added sucessfully" ]);
     }
+
+    public function usersList(){
+        
+        $uses = User::all();
+        return view("users")->with(["users"=>$uses]);
+    }
+
 
 
     public function logout(Request $request)
@@ -159,6 +233,38 @@ public function register(Request $request)
         // return response([
         //     "data"=> $data,            
         // ]);
+    }
+
+
+     /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+
+        //
+        DB::beginTransaction();
+        try{
+            
+            $user = User::find($id);            
+            //Cant delete himself            
+            if( $id == Auth::user()->id ){
+                return redirect()->back()->withErrors(['Error'=> "User can't delete himself!" ]);
+            }
+
+            $user->delete();
+            DB::commit();
+            return redirect()->back()->with(['success'=> "User has been Deleted!" ]);
+
+        }
+        //catch( AuthorizationException $e ){ echo $e->getMessage(); }
+        catch(Throwable $exception){
+            DB::rollback();            
+            return redirect()->back()->withErrors(['Error'=> $exception->getMessage() ]);
+        }
+        
+            
+      
     }
 
 
