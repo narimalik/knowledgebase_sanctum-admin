@@ -60,7 +60,9 @@ class CategoryController extends Controller
     public function create()
     {
         $status = [1 =>'Active', 0 => 'inActive'  ];
+        
         $categories_table = Category::all()->toArray();
+        
         $categories = array_combine( array_column($categories_table,'id') , array_column($categories_table,'category_name'));
         
         return view("addcategory")->with( [  "categories" => $categories, "status" => $status , 'url' => 'category-save']  );
@@ -74,7 +76,7 @@ class CategoryController extends Controller
         DB::beginTransaction();
         try{
             $validate = $request->validate([
-                "category_name" => ['required', 'min:5', 'max:100'],
+                "category_name" => ['required', 'min:1', 'max:100'],
 
             ]);
 

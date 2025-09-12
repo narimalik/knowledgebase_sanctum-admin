@@ -84,19 +84,28 @@ use Illuminate\Support\Str;
                         <th>Email</th>
                         <th>Usser Name</th>                        
                         <th>Permissions</th>
+                        <th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
         <tbody>
 
 
-        @foreach( $users  as $user)        
+        @foreach( $users  as $user)
           <tr>
               <td>{{ $user->name }}</td>
               <td>{{ $user->email ? $user->email : 'NA' }}</td>
               <td>{{ $user->username  }}</td>
-              <td>Permission will show Permission will show Permission will show </td>
               <td>
+
+                @foreach( $user->role  as $roleitem)                  
+                  <span class="badge text-bg-success"> {{ $roleitem->role }} </span>
+                @endforeach
+
+              </td>
+              <td>{!! $user->status ? '<span class="badge text-bg-success"> Active </span>' : '<span class="badge text-bg-danger"> InActve </span>'  !!}</td>
+              <td>
+                <a href="{{ url('user/gettoken/'.$user->id) }}"><span class="badge text-bg-dark"> <i class="nav-icon bi bi-pen"></i>  GetToken </span></a>
                 <a href="{{ url('user/edit/'.$user->id) }}"><span class="badge text-bg-warning"> <i class="nav-icon bi bi-pen"></i>  Edit</span></a>
                 <a href="{{ url('user/delete/'.$user ->id) }}" onclick=" return confirm('You want to delete this User!')"><span class="badge text-bg-danger"> <i class="nav-icon bi-trash"></i> Delete</span></a>
               </td>
@@ -118,6 +127,34 @@ use Illuminate\Support\Str;
         </tfoot> -->
     </table>
                     
+
+
+
+<!-- Trigger -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Open Modal
+</button>
+
+
+
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Popup from Controller</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 

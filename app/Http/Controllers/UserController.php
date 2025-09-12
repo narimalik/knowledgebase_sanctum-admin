@@ -23,7 +23,7 @@ use DB;
 class UserController extends Controller
 {
     //
-   ## use Utilities;
+    use Utilities;
 
     public function login(Request $request){
         
@@ -71,6 +71,26 @@ class UserController extends Controller
         }
 
     }
+
+
+
+    
+
+    public function getToken(string $id){
+
+        $user = User::findOrFail($id);
+            
+        $user->tokens()->delete();        
+        
+        $global_abilities = $this->getTokenGlobalAbilities();           
+
+        $token = $user->createToken( $user->email, $global_abilities)->plainTextToken;
+        echo $token; exit;
+}
+
+
+
+
 
     public function showRegisteration(Request $request)
     {
@@ -179,7 +199,8 @@ public function register(Request $request)
 
     public function usersList(){
         
-        $uses = User::all();
+        // $uses = User::all();
+        $uses = User::with(["role"])->get();
         return view("users")->with(["users"=>$uses]);
     }
 
@@ -256,7 +277,7 @@ public function register(Request $request)
             
             if($user->isadmin)
             {
-                return redirect()->back()->withErrors(['Error'=> "Admin User can't delete!" ]);
+                return redirect()->back()->withErrors(['Error'=> "Admin User can't be deleted!" ]);
             }
 
 

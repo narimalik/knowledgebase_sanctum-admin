@@ -85,6 +85,8 @@ Route::middleware(['auth'])->group(function(){
 
     Route::get("user/edit/{id}", [UserController::class, 'editUser'])->name('editUser');
 
+    Route::get("user/gettoken/{id}", [UserController::class, 'gettoken'])->name('gettoken');
+
     Route::post('user-update', [UserController::class,"userupdate"]);  
 
     
