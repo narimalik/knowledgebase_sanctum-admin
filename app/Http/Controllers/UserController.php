@@ -75,6 +75,7 @@ class UserController extends Controller
     public function showRegisteration(Request $request)
     {
         $roles = Role::all();
+        
         return view("add-new-user")->with(["status"=>array( 1=> "Active",  0=>"inActive"), "roles"=>$roles ]);
     }
 
@@ -151,28 +152,30 @@ public function register(Request $request)
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        # print_r( $request->all() ); exit;
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'username' => $request->username,
             'password' => Hash::make($request->password),
+            "isadmin" => $request->isadmin,
+            "status" => $request->status 
         ]);
 
         $roles = $request->roles;
         $user->role()->sync($roles);
 
-        #$categories = $request->categories;
-        #$article->categories()->sync($categories);
-
-       // event(new Registered($user));
-
-        Auth::login($user);
+        # Auth::login($user);
         // $token = $user->createToken($request->email)->plainTextToken;  // If you need token
          ## Create job to Send Welcom email         
         //  SendRegisteredEmailjob::dispatch($user);    //      
         
         return redirect()->back()->with(['success'=> "User Added sucessfully" ]);
     }
+
+
+
 
     public function usersList(){
         
@@ -245,12 +248,26 @@ public function register(Request $request)
         //
         DB::beginTransaction();
         try{
+            $user = null;
+            $user = User::find($id);    
+
+            // Can't be delted if its admin.
             
-            $user = User::find($id);            
+            
+            if($user->isadmin)
+            {
+                return redirect()->back()->withErrors(['Error'=> "Admin User can't delete!" ]);
+            }
+
+
+                   
             //Cant delete himself            
             if( $id == Auth::user()->id ){
                 return redirect()->back()->withErrors(['Error'=> "User can't delete himself!" ]);
             }
+            
+           
+
 
             $user->delete();
             DB::commit();

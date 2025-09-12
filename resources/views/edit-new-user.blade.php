@@ -133,15 +133,25 @@
                         </span>
                       </div>
 
-                     
 
 
 
+                      <hr />
+
+
+                      <div class="mb-3 ">
+                      <label for="exampleInputEmail1" class="form-label">Is Admin</label>
+                        <span class="list_of_checkboxs" >                            
+                          <input class="form-check-input" {{ $users->isadmin ? 'checked' : '' }}  value=1 type="checkbox" id="isadmin" name="isadmin"  >
+                        </span>
+                      </div>
+
+                      <hr />
                       
 
                       <div class="mb-3 ">
-                      <label for="exampleInputEmail1" class="form-label">User Status  label>
-                        <span class="list_of_checkboxs" >                            
+                      <label for="exampleInputEmail1" class="form-label"> User Status   <label>
+                        <span  >                            
                             <select class="form-select" name="status" id="status" >
                             @foreach($status as $k=>$v)
                             <option {{ ($users->status==$k) ? "selected": '' }} value="{{$k}}">{{$v}}</option>
@@ -149,6 +159,8 @@
                             </select>
                         </span>
                       </div>
+
+
 
                     </div>
                     <!--end::Body-->

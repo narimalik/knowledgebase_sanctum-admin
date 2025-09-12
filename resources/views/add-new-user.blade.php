@@ -147,9 +147,17 @@
                         </span>
                       </div>
 
+                      <hr />
 
 
+                      <div class="mb-3 ">
+                      <label for="exampleInputEmail1" class="form-label">Is Admin</label>
+                        <span class="list_of_checkboxs" >                            
+                          <input class="form-check-input " value=1 type="checkbox" id="isadmin" name="isadmin"  >
+                        </span>
+                      </div>
                       
+                      <hr />
 
                       <div class="mb-3 ">
                       <label for="exampleInputEmail1" class="form-label">User Status</label>
