@@ -59,6 +59,7 @@ Route::middleware(['auth'])->group(function(){
 
     Route::post('category-save', [CategoryController::class,"store"]);
 
+    Route::get('category/articles/{id}', [CategoryController::class,'show']);
 
 
     #Articles

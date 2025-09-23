@@ -108,6 +108,8 @@ class CategoryController extends Controller
 
     }
 
+
+
     /**
      * Display the specified resource.
      */
@@ -115,10 +117,18 @@ class CategoryController extends Controller
     {
         
       
-        $categories = Category::with(['articles'])->where("id",$id)->get();           
-        return  CategoryResource::collection($categories);
+        $categories = Category::with(['articles'])->find($id);
+
+        return view("article")->with(["articles"=> $categories->articles ] );
+
+        ### $articles = Article::with(['categories'])->get();
+
+        ///  return  CategoryResource::collection($categories);
 
     }
+
+
+
 
     /**
      * Show the form for editing the specified resource.

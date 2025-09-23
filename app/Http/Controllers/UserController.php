@@ -179,7 +179,7 @@ public function register(Request $request)
             'email' => $request->email,
             'username' => $request->username,
             'password' => Hash::make($request->password),
-            "isadmin" => $request->isadmin,
+            "isadmin" => $request->isadmin ?? 0,
             "status" => $request->status 
         ]);
 
@@ -275,16 +275,16 @@ public function register(Request $request)
             // Can't be delted if its admin.
             
             
-            if($user->isadmin)
+            if( ($user->isadmin) || ($id == Auth::user()->id) )
             {
-                return redirect()->back()->withErrors(['Error'=> "Admin User can't be deleted!" ]);
+                return redirect()->back()->withErrors(['Error'=> "User can't be deleted!" ]);
             }
 
 
                    
             //Cant delete himself            
             if( $id == Auth::user()->id ){
-                return redirect()->back()->withErrors(['Error'=> "User can't delete himself!" ]);
+              //  return redirect()->back()->withErrors(['Error'=> "User can't delete himself!" ]);
             }
             
            

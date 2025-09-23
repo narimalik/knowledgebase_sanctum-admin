@@ -38,6 +38,7 @@ class ArticleController extends Controller
         
     }
 
+    
     /**
      * Show the form for creating a new resource.
      */
@@ -49,6 +50,9 @@ class ArticleController extends Controller
         $categories = array_combine( array_column($categories_table,'id') , array_column($categories_table,'category_name'));
         return view("add-article")->with(["categories"=>$categories, "status"=>$status ] );
     }
+
+
+
 
     /**
      * Store a newly created resource in storage.

@@ -77,7 +77,7 @@
                 
                 
                   @endphp
-                  <a href="../docs/introduction.html" class="nav-link">
+                  <a href="{{ url('category/articles/'.$category->id) }}" class="nav-link">
                     <i class="nav-icon  {{ $category->category_icon_css ?? '' }} "></i>
                     <p>{{ $category->category_name }}</p>
                   </a>
