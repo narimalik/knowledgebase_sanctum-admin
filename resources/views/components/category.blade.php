@@ -91,7 +91,7 @@
               <td>{{ $category->parent ? $category->parent->category_name : 'NA' }}</td>
               <td>{{ $category->category_short_detail	 }}</td>
               <td>
-                <span class="badge text-bg-success"> <i class="nav-icon bi bi-list"></i> See Articles</span>              
+              <a href="{{ url('category/articles/'.$category->id) }}"><span class="badge text-bg-success"> <i class="nav-icon bi bi-list"></i> See Articles</span> </a>
                 <a href="{{ url('category/edit/'.$category->id) }}"><span class="badge text-bg-warning"> <i class="nav-icon bi bi-pen"></i>  Edit</span></a>
                 <a href="{{ url('category/delete/'.$category->id) }}" onclick=" return confirm('You want to delete this category!')"><span class="badge text-bg-danger"> <i class="nav-icon bi-trash"></i> Delete</span></a>
               </td>

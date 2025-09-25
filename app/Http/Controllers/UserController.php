@@ -15,10 +15,14 @@ use App\Events\RegisteredUser;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Jobs\SendRegisteredEmailjob;
+use App\Mail\RestPasswrodMail;
 use App\Models\Role;
 use App\Traits\Utilities;
+use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 use DB;
+use Exception;
+use Str;
 
 class UserController extends Controller
 {
@@ -73,6 +77,110 @@ class UserController extends Controller
     }
 
 
+
+
+
+
+    public function resetpasswordupdateform( Request $request){
+
+        $request->validate([
+            "email" => ["required", "email"]
+        ]);
+
+        
+       // echo Hash::make($query_token); exit;
+        // $db_token = DB::table("password_reset_tokens")->where("email", $request->email )->first();
+        
+       //  echo Hash::check($request->token, $db_token->token); exit;
+        
+        return view("components.resetpasswordupdateform")->with(["data"=>$request]);
+
+    }
+
+
+
+
+    
+    public function resetpasswordupdate( Request $request){
+
+        $request->validate([
+            "email" => ["required", "email"],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            "token" => ["required"]
+        ]);
+
+        
+
+       // echo Hash::make($query_token); exit;
+        $db_token = DB::table("password_reset_tokens")->where("email", $request->email )->first();
+
+        if(!$db_token)
+        {
+            return redirect()->back()->withErrors(["Errors" => "Invalid Request" ]);
+            
+        }
+
+        
+
+        echo Hash::check($request->token, $db_token->token); exit;
+        
+        # return view("components.resetpasswordupdateform");
+
+    }
+
+
+
+
+
+    public function sendForgotPasswordLink(Request $request){
+
+        try{
+        
+            $request->validate([
+                "email" => ["required", "email"]
+            ]);
+
+            # Check user exist
+            $user = User::where("email", $request->email)->first();
+
+            if(!$user){
+                return redirect()->back()->withErrors(["Errors" => "Email not found" ]);
+            }
+
+            # Generate Token
+
+            $db_token = DB::table("password_reset_tokens")->where("email", $request->email)->first();
+
+            $token = Str::random(60);
+
+            if($db_token)
+            {        
+                DB::table("password_reset_tokens")->where("email", $request->email)->delete();
+            }
+
+            DB::table("password_reset_tokens")->insert([
+                "email"=> $request->email,
+                "token"=> Hash::make($token),
+                "created_at"=>Carbon::now()
+            ]);
+
+            # Send password link
+            $user->respasswordurl = "resetpasswordupdateform/".$token.'?email='.$request->email;
+            $mail = new RestPasswrodMail($user, $request);
+            #### Do it with Event/queue.            
+            Mail::to($user)->send( $mail);
+
+        }catch(Throwable $exception){
+
+            return redirect()->back()->withErrors(['Error'=> $exception->getMessage() ]);
+        }
+
+        return redirect()->back()->with(['success'=> "Email will be sent on this email if its already registered with us." ]);
+
+        
+
+
+    }
 
     
 

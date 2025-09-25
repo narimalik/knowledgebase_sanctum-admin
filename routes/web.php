@@ -17,10 +17,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('components.homepage');
-});
-
 
 Route::post('/dologin',[ UserController::class , 'login'])->name('dologin');
 
@@ -29,13 +25,50 @@ Route::get ('/register', function(){    return view('components.register');});
 Route::post ('/register', [UserController::class, 'register'])->name('register');
 */
 
+
+
  Route::get ('/login', function(){
      return view('components.login');
  })->name('login');
 
 
 
+
+// Forgot Password Form
+Route::get ('/forgotpassword', function(){
+
+    abort(450, 'Internal Server Error Test');
+    
+    return view('components.forgotpassword');
+})->name('forgotpassword');
+
+
+//Sending link in email
+Route::post("send-forgotpassword-link", [UserController::class, "sendForgotPasswordLink"]);
+
+
+
+
+Route::get('/resetpasswordupdateform/{token}', [UserController::class, "resetpasswordupdateform"] );
+
+Route::post('/resetpasswordupdate', [UserController::class, "resetpasswordupdate"] );
+
+
+
+
+
+
+
+
 Route::middleware(['auth'])->group(function(){
+
+#Home page    
+Route::get('/', function () {
+    return view('components.homepage');
+});
+
+
+
 
     Route::get('dashboard', function(){        
         return view('components.dashboard');
