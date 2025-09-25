@@ -37,8 +37,6 @@ Route::post ('/register', [UserController::class, 'register'])->name('register')
 // Forgot Password Form
 Route::get ('/forgotpassword', function(){
 
-    abort(450, 'Internal Server Error Test');
-    
     return view('components.forgotpassword');
 })->name('forgotpassword');
 
