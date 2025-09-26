@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -11,18 +12,21 @@ use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\UserRegistered;
 
-use App\Events\RegisteredUser;
-use App\Http\Resources\UserCollection;
+#use App\Events\RegisteredUser;
+#use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
-use App\Jobs\SendRegisteredEmailjob;
-use App\Mail\RestPasswrodMail;
+use App\Jobs\PasswordResetJob;
+#se App\Jobs\SendRegisteredEmailjob;
+#use App\Mail\RestPasswrodMail;
 use App\Models\Role;
 use App\Traits\Utilities;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 use DB;
 use Exception;
+use PhpParser\Node\Expr\Cast\Object_;
 use Str;
+use Throwable;
 
 class UserController extends Controller
 {
@@ -108,24 +112,32 @@ class UserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             "token" => ["required"]
         ]);
+ 
+        try{
 
+                // Token exist and valid in DB?
+                $db_token = DB::table("password_reset_tokens")->where("email", $request->email )->first();
+                $token_created = Carbon::parse($db_token->created_at);                 
+
+                if(!$db_token || !Hash::check($request->token, $db_token->token ) || $token_created->diffInMinutes(now()) > 60  )
+                {
+                    return redirect()->back()->withErrors(["Errors" => "Invalid/Expired Request" ]);
+                }
+
+                # Update user password
+                $user = User::where("email", $request->email )->first();
+
+                $user->password = Hash::make($request->password);
+
+                $user->save();
         
+            }catch(Throwable $exception){
 
-       // echo Hash::make($query_token); exit;
-        $db_token = DB::table("password_reset_tokens")->where("email", $request->email )->first();
+                return redirect()->back()->withErrors(['Error'=> $exception->getMessage() ]);
+            }
 
-        if(!$db_token)
-        {
-            return redirect()->back()->withErrors(["Errors" => "Invalid Request" ]);
-            
-        }
-
-        
-
-        echo Hash::check($request->token, $db_token->token); exit;
-        
-        # return view("components.resetpasswordupdateform");
-
+            DB::table("password_reset_tokens")->where("email", $request->email)->delete();
+            return redirect()->route('login')->with(['success'=> "New Password has been updated please login with new passwrod!" ]);
     }
 
 
@@ -165,10 +177,14 @@ class UserController extends Controller
             ]);
 
             # Send password link
-            $user->respasswordurl = "resetpasswordupdateform/".$token.'?email='.$request->email;
-            $mail = new RestPasswrodMail($user, $request);
-            #### Do it with Event/queue.            
-            Mail::to($user)->send( $mail);
+            $extra_obj = new \stdClass();
+            
+            $extra_obj->respasswordurl = "resetpasswordupdateform/".$token.'?email='.$request->email;
+            #$extra_obj->current_token = $token;            
+           
+            
+            PasswordResetJob::dispatch($user, $extra_obj);
+            
 
         }catch(Throwable $exception){
 

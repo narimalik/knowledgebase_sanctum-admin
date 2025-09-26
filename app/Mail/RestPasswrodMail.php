@@ -17,13 +17,15 @@ class RestPasswrodMail extends Mailable
      * Create a new message instance.
      */
 
-     protected $user, $request;
+     protected $user, $extra_obj;
 
 
-    public function __construct($user, $request)
+    public function __construct(  $user,  $extra_obj )
     {
+        
         $this->user = $user;
-        $this->request = $request;
+        $this->extra_obj = $extra_obj;    
+
     }
 
     /**
@@ -45,7 +47,7 @@ class RestPasswrodMail extends Mailable
             view: 'mail.resetpassword',
             with: [
                 "user"=>$this->user,
-                "token"=>$this->request
+                "extra_obj"=>$this->extra_obj
             ]
         );
     }

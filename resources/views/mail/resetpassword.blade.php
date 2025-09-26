@@ -28,7 +28,9 @@
     <div class="header">
       <h1>KnowledgeBase</h1>
     </div>
-
+@php
+    
+@endphp
     <div class="content">
       <p style="margin-top:0;">Hi {{ $user->name ?? 'there' }},</p>
 
@@ -38,12 +40,12 @@
 
       <div class="btn-wrap">
         <!-- actionUrl should be a fully-qualified URL -->
-        <a href="{{ url($user->respasswordurl) }}" class="btn" target="_blank" rel="noopener noreferrer">Reset your password</a>
+        <a href="{{ url($extra_obj->respasswordurl) }}" class="btn" target="_blank" rel="noopener noreferrer">Reset your password</a>
       </div>
 
       <p class="muted">
         If the button above does not work, copy and paste the following URL into your browser:
-        <br><a href="{{ url($user->respasswordurl) }}" style="color:#2563eb; word-break:break-all;">{{ url($user->respasswordurl) }}</a>
+        <br><a href="{{ url($extra_obj->respasswordurl) }}" style="color:#2563eb; word-break:break-all;">{{ url($extra_obj->respasswordurl) }}</a>
       </p>
 
       <hr style="border:none;border-top:1px solid #eef2f7;margin:18px 0;">
