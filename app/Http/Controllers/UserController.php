@@ -107,22 +107,31 @@ class UserController extends Controller
     
     public function resetpasswordupdate( Request $request){
 
-        $request->validate([
-            "email" => ["required", "email"],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            "token" => ["required"]
-        ]);
- 
+      
         try{
 
                 // Token exist and valid in DB?
                 $db_token = DB::table("password_reset_tokens")->where("email", $request->email )->first();
+                if(!$db_token)
+                {
+                    return redirect()->back()->withErrors(["Errors" => "Invalid Request" ]);
+                }
+
+
                 $token_created = Carbon::parse($db_token->created_at);                 
 
                 if(!$db_token || !Hash::check($request->token, $db_token->token ) || $token_created->diffInMinutes(now()) > 60  )
                 {
-                    return redirect()->back()->withErrors(["Errors" => "Invalid/Expired Request" ]);
+                    return redirect()->back()->withErrors(["Errors" => "Expired Request" ]);
                 }
+
+
+                $request->validate([
+                    "email" => ["required", "email"],
+                    'password' => ['required', 'confirmed', Rules\Password::defaults()],
+                    "token" => ["required"]
+                ]);
+         
 
                 # Update user password
                 $user = User::where("email", $request->email )->first();
