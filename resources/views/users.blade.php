@@ -17,7 +17,9 @@ use Illuminate\Support\Str;
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                 <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page"><a href=" {{ url('userregisteration') }} ">Add New User</a></li>
+                
+                <li class="breadcrumb-item active" aria-current="page"><a href=" {{ url('userregisteration') }} ">Add New User</a></li>
+
                 </ol>
               </div>
             </div>
@@ -105,9 +107,17 @@ use Illuminate\Support\Str;
               </td>
               <td>{!! $user->status ? '<span class="badge text-bg-success"> Active </span>' : '<span class="badge text-bg-danger"> InActve </span>'  !!}</td>
               <td>
+                
                 <a href="{{ url('user/gettoken/'.$user->id) }}"><span class="badge text-bg-dark"> <i class="nav-icon bi bi-pen"></i>  GetToken </span></a>
+                
+                @can('update', $user)
                 <a href="{{ url('user/edit/'.$user->id) }}"><span class="badge text-bg-warning"> <i class="nav-icon bi bi-pen"></i>  Edit</span></a>
+                @endcan
+
+                @can('delete', $user)
                 <a href="{{ url('user/delete/'.$user ->id) }}" onclick=" return confirm('You want to delete this User!')"><span class="badge text-bg-danger"> <i class="nav-icon bi-trash"></i> Delete</span></a>
+                @endcan
+
               </td>
               
           </tr>

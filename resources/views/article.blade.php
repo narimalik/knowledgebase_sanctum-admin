@@ -110,8 +110,13 @@ use Illuminate\Support\Str;
               </td>
               <td width="30%">{!! Str::words($article->detail, 20, '...')  !!}</td> <!-- Protect your application from XSS (Cross-Site Scripting) attacks.-->
               <td>
-                <a href="{{ url('article/edit/'.$article->id) }}"><span class="badge text-bg-warning"> <i class="nav-icon bi bi-pen"></i>  Edit</span></a>
+              @can('update', $article)
+              <a href="{{ url('article/edit/'.$article->id) }}"><span class="badge text-bg-warning"> <i class="nav-icon bi bi-pen"></i>  Edit</span></a>
+              @endcan
+
+              @can('delete', $article)
                 <a href="{{ url('article/delete/'.$article ->id) }}" onclick=" return confirm('You want to delete this article!')"><span class="badge text-bg-danger"> <i class="nav-icon bi-trash"></i> Delete</span></a>
+              @endcan
               </td>
               
           </tr>

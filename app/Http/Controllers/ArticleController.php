@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\ArticleEvent;
+
 use App\Http\Resources\ArticleResource;
 use App\Models\Article;
 use App\Models\Category;
@@ -20,16 +20,7 @@ class ArticleController extends Controller
     public function index(Request $request, Article $article)
     {
        
-        // if($request->user()->cant('viewAny',$article)){ 
-        //     return response([                
-        //         "message"=>"unauthorized"
-        //     ],403);
-        // }
-
-        //$this->authorize('viewAny',Article::class);
-        //$articles = Article::with(['categories'])->where('category',1)->paginate(10);
-        // $articles = Article::paginate(10);
-        // return ArticleResource::collection($articles);
+  
 
 
         $articles = Article::with(['categories'])->get();
@@ -44,10 +35,15 @@ class ArticleController extends Controller
      */
     public function create()
     {
+
+        $article = new Article(); 
+        $this->authorize("create", $article);
+
         $status = [1 =>'Active', 0 => 'inActive' ];
         $categories_table = Category::all()->toArray();
         
         $categories = array_combine( array_column($categories_table,'id') , array_column($categories_table,'category_name'));
+
         return view("add-article")->with(["categories"=>$categories, "status"=>$status ] );
     }
 
@@ -59,6 +55,9 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
+
+        $article = new Article(); 
+        $this->authorize("create", $article);
       
         #print_r($request->all()); exit;
         $request->validate([
@@ -132,22 +131,24 @@ class ArticleController extends Controller
      */
     public function edit(string $id)
     {
+        $article = Article::find($id);
+        $this->authorize("update", $article);
+
         DB::beginTransaction();
         try{
+
+            $article_detail = Article::with('categories:id')->where("id",$id)->get()->toArray();
+           
+            if ( is_null($article_detail) ) {
+                return redirect()->route("edit-article")->withErrors(['Article not found!']);
+            }
+            
+            $article_detail = (object)$article_detail[0];
                 
             $status = [1 =>'Active', 0 => 'inActive'  ];
             $categories_table = Category::all()->toArray();
             $categories = array_combine( array_column($categories_table,'id') , array_column($categories_table,'category_name'));
-            
-            $article_detail = Article::with('categories:id')->where("id",$id)->get()->toArray();
-            
-            
-            if ( is_null($article_detail) ) {
-                return redirect()->route("edit-article")->withErrors(['Article not found!']);
-            }
-
-            $article_detail = (object)$article_detail[0];
-
+                     
             #print_r($article_detail); exit;
 
             $articles_categories_ids = array_column($article_detail->categories,'id');
@@ -156,7 +157,7 @@ class ArticleController extends Controller
             return view('edit-article')->with(["article_detail" => $article_detail, "articles_categories_ids"=> $articles_categories_ids, "categories"=>$categories, "status"=>$status , 'url'=>'article-update'] );
 
             }catch(Throwable $exception){
-               
+              
                 return redirect()->route("edit-article", ['id' => $article_detail->id])->withErrors([$exception->getMessage()]);
                     
             }
@@ -173,10 +174,8 @@ class ArticleController extends Controller
 
             $article = Article::find($request->id);
 
-           // $this->authorize('update', $article);
-
-            //
-            
+            $this->authorize('update', $article);
+ 
             $request->validate([
                 "article_title" => ["required","max:100","min:5"],
                 "detail" => ["required","min:5"],

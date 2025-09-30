@@ -83,7 +83,11 @@ Route::get('/', function () {
 
     Route::get('category', [CategoryController::class,'index'])->name("category");
 
-    Route::get('category/edit/{id}', [CategoryController::class,'edit']);
+    #Route::get('category/edit/{id}', [CategoryController::class,'edit']);
+    Route::get('category/edit/{id}', [CategoryController::class,'edit'])
+   # ->middleware('can:update,category')
+    ;
+
     Route::post('category-update', [CategoryController::class,"update"])->name("category-update");
     
     Route::get('category/delete/{id}', [CategoryController::class,'destroy']);

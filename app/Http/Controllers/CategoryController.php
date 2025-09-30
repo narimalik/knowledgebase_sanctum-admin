@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\CategoryCollection;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -59,6 +60,11 @@ class CategoryController extends Controller
      */
     public function create()
     {
+
+        $category= new Category(); 
+
+        $this->authorize("create", $category);
+        
         $status = [1 =>'Active', 0 => 'inActive'  ];
         
         $categories_table = Category::all()->toArray();
@@ -80,6 +86,9 @@ class CategoryController extends Controller
 
             ]);
 
+            $category= new Category(); 
+            $this->authorize("create", $category);
+
            $cat_id =  Category::create([
                 'category_name' => $request->category_name,
                 'category_short_detail' => $request->category_detail,
@@ -95,14 +104,7 @@ class CategoryController extends Controller
 
         }catch(Throwable $exception){
             DB::rollback();    
-
-            // return response([
-            //     "message"=> $exception->getMessage(),
-            //     ],
-            //     500
-            // );
-
-            return redirect()->back()->withErrors(['Error'=> $exception->getMessage() ]);
+               return redirect()->back()->withErrors(['Error'=> $exception->getMessage() ]);
         }
             
 
@@ -180,21 +182,23 @@ class CategoryController extends Controller
                     "category_name" => ['required', 'min:5', 'max:100'],
                 ]);
 
-                $cateogry = Category::find($request->id);
+                $category = Category::find($request->id);
 
-                if ( is_null($cateogry) ) {                
+                $this->authorize("update", $category);
+
+                if ( is_null($category) ) {                
                     return redirect()->route("add-category")->withErrors(['Category not found!']);                   
                 }
     
-                $cateogry->category_name = $request->category_name;
+                $category->category_name = $request->category_name;
 
-                $cateogry->category_short_detail = $request->category_detail;
-                $cateogry->parent_category_id = $request->paraent_category;
-                $cateogry->category_icon_css = $request->category_icon_css;
-                $cateogry->status = $request->status;
+                $category->category_short_detail = $request->category_detail;
+                $category->parent_category_id = $request->paraent_category;
+                $category->category_icon_css = $request->category_icon_css;
+                $category->status = $request->status;
 
-                $cateogry->updated_by=Auth::user()->id;
-                $cateogry->save();
+                $category->updated_by=Auth::user()->id;
+                $category->save();
                 DB::commit();
 
                 return redirect()->back()->with(['success'=> "Category has been Updated" ]);
@@ -210,26 +214,26 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy( string $id)
     {
         //
         DB::beginTransaction();
         try{
             $category = Category::find($id);
-          #  $this->authorize("delete", $category);
-            
+            $this->authorize("delete", $category);           
             $category->delete();
             DB::commit();
             return redirect()->back()->with(['success'=> "Category has been Deleted!" ]);
-
-
-        }
-        //catch( AuthorizationException $e ){ echo $e->getMessage(); }
+        }        
         catch(Throwable $exception){
-            DB::rollback();            
+            DB::rollback();
             return redirect()->back()->withErrors(['Error'=> $exception->getMessage() ]);
         }
         
 
     }
+
+
+
+    
 }

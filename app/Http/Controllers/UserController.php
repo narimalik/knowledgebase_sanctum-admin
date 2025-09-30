@@ -11,13 +11,8 @@ use Illuminate\Validation\Rules;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\UserRegistered;
-
-#use App\Events\RegisteredUser;
-#use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Jobs\PasswordResetJob;
-#se App\Jobs\SendRegisteredEmailjob;
-#use App\Mail\RestPasswrodMail;
 use App\Models\Role;
 use App\Traits\Utilities;
 use Carbon\Carbon;
@@ -25,6 +20,7 @@ use Illuminate\Validation\Rule;
 use DB;
 use Exception;
 use PhpParser\Node\Expr\Cast\Object_;
+use PhpParser\Node\Expr\New_;
 use Str;
 use Throwable;
 
@@ -51,30 +47,9 @@ class UserController extends Controller
             $request->session()->regenerate();
             return redirect()->route('dashboard');
             
-        //     $user = Auth::user();
-            
-        //    $user->tokens()->delete();
-
-        //    $request->session()->regenerate();
-           
-        //    $global_abilities = $this->getTokenGlobalAbilities();           
-
-        //     $token = $user->createToken( $request->input('email'), $global_abilities)->plainTextToken;
-
-        //     return response([ 
-        //         "token"=>$token,
-        //         "user"=>$user,
-        //         'message'=>'Login successfull'
-        //         ],
-        //     200);
-
-
-            
         }
         else{
-            // return response([
-            //     'message' => 'Invalid Login Details'
-            // ], 401);
+           
             return redirect()->back()->withErrors(['Error'=> 'User Name or Password is Invalid!']);
         }
 
@@ -90,12 +65,6 @@ class UserController extends Controller
         $request->validate([
             "email" => ["required", "email"]
         ]);
-
-        
-       // echo Hash::make($query_token); exit;
-        // $db_token = DB::table("password_reset_tokens")->where("email", $request->email )->first();
-        
-       //  echo Hash::check($request->token, $db_token->token); exit;
         
         return view("components.resetpasswordupdateform")->with(["data"=>$request]);
 
@@ -212,6 +181,7 @@ class UserController extends Controller
     public function getToken(string $id){
 
         $user = User::findOrFail($id);
+        $this->authorize('getToken', $user);
             
         $user->tokens()->delete();        
         
@@ -227,6 +197,11 @@ class UserController extends Controller
 
     public function showRegisteration(Request $request)
     {
+
+
+        $user = new User();
+        $this->authorize('create', $user);
+
         $roles = Role::all();
         
         return view("add-new-user")->with(["status"=>array( 1=> "Active",  0=>"inActive"), "roles"=>$roles ]);
@@ -237,13 +212,12 @@ class UserController extends Controller
 
     public function editUser(string $id)
     {   
-        $users = User::where("id", $id)->with("role")->first();
-        
-        $roles_list = Role::all();
-        
+       
+        $users = User::where("id", $id)->with("role")->first();        
+        $this->authorize('update', $users);
+        $roles_list = Role::all();        
         $roles = $users->role->toArray();
         $roles_currently_assigned =  array_column($roles,"id");
-
         return view("edit-new-user")->with(["users"=> $users, "status"=>array( 1=> "Active",  0=>"inActive") , "roles" => $roles, "roles_currently_assigned"=>$roles_currently_assigned, "roles_list"=>$roles_list ]);
 
     }   
@@ -257,7 +231,7 @@ public function userupdate( Request $request )
 
         $user = User::find($request->id);
 
-      
+        $this->authorize('update', $user);
         
         $request->validate([
             'name' => ['required', 'string', 'max:255'],            
@@ -298,6 +272,10 @@ public function userupdate( Request $request )
 public function register(Request $request)
     {
         
+        $user = new User();
+        $this->authorize('create', $user);
+
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],            
             'username' => ['required', 'string', 'max:255','alpha_dash', 'unique:'.User::class],
@@ -404,6 +382,8 @@ public function register(Request $request)
         try{
             $user = null;
             $user = User::find($id);    
+
+            $this->authorize('delete', $user);
 
             // Can't be delted if its admin.
             
