@@ -49,11 +49,13 @@
             <!--begin::Row-->
             <div class="row">
               
-              <div >
-                <div class="d-grid gap-2">
-                  <button type="submit" class="btn btn-primary">Send Link</button>
-                </div>
+            <div class="d-flex gap-2">
+               
+                  <button type="submit" class="btn btn-danger">Send Link</button>  
+                  <a href="{{ url('/') }}" ><button type="button"  class="btn btn-primary">Cancel</button></a>              
+               
               </div>
+
               <!-- /.col -->
             </div>
             <!--end::Row-->

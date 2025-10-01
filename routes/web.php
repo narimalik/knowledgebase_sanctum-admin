@@ -60,12 +60,24 @@ Route::post('/resetpasswordupdate', [UserController::class, "resetpasswordupdate
 
 Route::middleware(['auth'])->group(function(){
 
-#Home page    
-Route::get('/', function () {
-    return view('components.homepage');
-});
+        #Home page    
+        Route::get('/', function () {
+            return view('components.homepage');
+        });
 
 
+    
+    // Route::get('profile', function(){        
+    //     return view('components.profile')->with(["user" => auth()->user() ]);
+    // })->name('profile');
+
+
+    
+    Route::get('user/profile',[UserController::class,"profile"])->name("profile");
+
+    Route::get('user/changepassword/',[UserController::class,"changepasswordform"])->name("changepasswordform");
+
+    Route::post('user/changepassword/',[UserController::class,"changepassword"])->name("changepassword");
 
 
     Route::get('dashboard', function(){        

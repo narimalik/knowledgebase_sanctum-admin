@@ -23,6 +23,7 @@ use PhpParser\Node\Expr\Cast\Object_;
 use PhpParser\Node\Expr\New_;
 use Str;
 use Throwable;
+use Illuminate\Support\Facades\Crypt;
 
 class UserController extends Controller
 {
@@ -413,11 +414,55 @@ public function register(Request $request)
             DB::rollback();            
             return redirect()->back()->withErrors(['Error'=> $exception->getMessage() ]);
         }
-        
-            
-      
+
+
     }
 
 
 
-}
+    public function profile(){
+            
+        
+
+        return view('components.profile');
+    }
+
+
+    public function changepasswordform(  ){
+        
+        return view('components.changepassword');
+    }
+
+
+    public function changepassword( Request $request ){
+       
+        $request->validate([
+                'current_password' => ['required' , 'current_password' ], // 'current_password' will check current user passwrod.
+                'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            ], [
+                'current_password' => 'The current password you entered is incorrect.',
+            ]    
+        );
+
+
+        try{
+            $user = Auth::user();
+            
+            $user->password = Hash::make($request->password);
+            $user->save();
+            #$user = Auth::user();
+            #var_dump($user); exit;
+            return redirect()->back()->with(['success'=> "Password updated successfully" ]);
+
+        }catch(Throwable $exception){
+                DB::rollback();            
+                return redirect()->back()->withErrors(['Error'=> $exception->getMessage() ]);
+            }
+
+        # return view('components.changepassword');
+        
+    }
+
+
+
+}  // End Class
