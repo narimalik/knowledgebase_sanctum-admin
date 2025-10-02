@@ -11,6 +11,7 @@ use Tests\TestCase;
 class UserTest extends TestCase
 {
 
+    use RefreshDatabase;
 
     protected function setUp(): void
     {
@@ -56,12 +57,11 @@ class UserTest extends TestCase
         $loggedin = $this->actingAs($user);
         $loggedin = $this->actingAs($user)
                     ->get("/dashboard")
-                    ->assertStatus(200)
-                    //->assertSee('Dashboard')
-                    ;
-        # Assert
-        $res = $loggedin->get("/dashboard");
-        $res->assertStatus(200);
+                    ->assertStatus(200);
+
+
+        # Assert      
+        $loggedin->assertStatus(200);
 
     }
 

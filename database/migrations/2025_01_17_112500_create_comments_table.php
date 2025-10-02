@@ -14,14 +14,15 @@ return new class extends Migration
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
             $table->text('comments_detail')->nullable(true);
-            $table->integer('parent_comment_id')->default(0);
+            $table->integer('parent_comment_id')->nullable(true)->default(0);         
             $table->integer('article_id');
             $table->tinyInteger('status')->default(0);
             $table->integer('added_by');
-            $table->integer('updated_by');            
+            $table->integer('updated_by');               
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.
