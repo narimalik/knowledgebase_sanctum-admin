@@ -25,6 +25,9 @@ use Str;
 use Throwable;
 use Illuminate\Support\Facades\Crypt;
 
+
+
+
 class UserController extends Controller
 {
     //
@@ -45,7 +48,10 @@ class UserController extends Controller
         
         if(Auth::attempt($user_credentials)){
             
+
+
             $request->session()->regenerate();
+
             return redirect()->route('dashboard');
             
         }
