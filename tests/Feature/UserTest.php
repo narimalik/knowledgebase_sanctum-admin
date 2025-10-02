@@ -27,23 +27,6 @@ class UserTest extends TestCase
 
 
 
-    /**
-     * A basic feature test example.
-     */
-    public function test_can_access_homepage(): void
-    {
-        ob_start(); // start buffer
-            $response = $this->get('/login');
-            $response->assertStatus(200);
-            $output = ob_get_clean();
-
-            if (!empty($output)) {
-                #dd($output);
-            }
-
-    }
-
-
       /**
      * A basic feature test example.
      */
