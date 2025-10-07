@@ -27,7 +27,7 @@ class UserPolicy
 
        # is user Admin?
        # is this user added this category?
-       if( $user->isadmin )
+       if( $user->isadmin || $user->is_super_admin)
        {                 
          return true;
        }
@@ -46,7 +46,7 @@ class UserPolicy
        $need_permissoin = 'user:can-edit';
        # is user Admin?       
        
-       if( $user->isadmin)
+       if( $user->isadmin || $user->is_super_admin )
        {                 
          return true;
        }
@@ -64,10 +64,11 @@ class UserPolicy
        $need_permissoin = 'user:can-delete';
        # is user Admin?
        # is this user added this category?
-       if( $user->isadmin )
+       if( $user->isadmin || $user->is_super_admin )
        {                 
          return true;
        }
+       
        
        # is this user have permisson to delete?
        

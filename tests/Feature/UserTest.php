@@ -48,6 +48,15 @@ class UserTest extends TestCase
 
     }
 
+    public function test_user_can_be_authenticate(){
+
+        $user = User::factory()->create();
+        $this->actingAs($user);
+        $this->assertAuthenticatedAs($user);
+
+
+    }
+
 
 
 

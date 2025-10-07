@@ -27,7 +27,7 @@ class ArticlePolicy
 
        # is user Admin?
        # is this user added this category?
-       if( $user->isadmin )
+       if( $user->isadmin || $user->is_super_admin)
        {                 
          return true;
        }
@@ -45,7 +45,7 @@ class ArticlePolicy
        $need_permissoin = 'article:can-delete';
        # is user Admin?
        # is this user added this category?
-       if( $user->isadmin || $user->id === $article->added_by )
+       if( $user->isadmin || $user->is_super_admin || $user->id === $article->added_by )
        {                 
          return true;
        }
@@ -67,7 +67,7 @@ class ArticlePolicy
        # is user Admin?
        # is this user added this article?
        
-       if( $user->isadmin || $user->id === $article->added_by )
+       if( $user->isadmin || $user->is_super_admin || $user->id === $article->added_by )
        {                 
          return true;
        }

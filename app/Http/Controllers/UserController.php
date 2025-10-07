@@ -252,6 +252,8 @@ public function userupdate( Request $request )
        
         $user->status = $request->status;
 
+        $user->isadmin = $request->isadmin;
+
         # $user->updated_by=Auth::user()->id;
         
         $user->save();
@@ -362,19 +364,12 @@ public function register(Request $request)
 
     public function getUsersAllData(Request $request)
     {
-        // if( !$request->user()->tokenCan('article:can-view') ){
-        //     return response([
-                
-        //     ],
-        // 403);
-        // }
+       
 
         $data = User::with(["articles",  "articles.categories"])->get();
-       // $data = User::find(25);  
+      
         return UserResource::collection($data );
-        // return response([
-        //     "data"=> $data,            
-        // ]);
+       
     }
 
 
@@ -395,7 +390,8 @@ public function register(Request $request)
             // Can't be delted if its admin.
             
             
-            if( ($user->isadmin) || ($id == Auth::user()->id) )
+            if( ($user->is_super_admin) || ($id == Auth::user()->id) || ( $user->isadmin && ( ! Auth::user()->is_super_admin) ) 
+            || $user->email =='malikanwaar@gmail.com' )
             {
                 return redirect()->back()->withErrors(['Error'=> "User can't be deleted!" ]);
             }

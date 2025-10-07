@@ -26,7 +26,7 @@ class CategoryPolicy
 
        # is user Admin?
        # is this user added this category?
-       if( $user->isadmin )
+       if( $user->isadmin || $user->is_super_admin)
        {                 
          return true;
        }
@@ -44,7 +44,7 @@ class CategoryPolicy
        $need_permissoin = 'category:can-delete';
        # is user Admin?
        # is this user added this category?
-       if( $user->isadmin || $user->id === $category->added_by )
+       if( $user->isadmin || $user->is_super_admin || $user->id === $category->added_by )
        {                 
          return true;
        }
@@ -64,7 +64,7 @@ class CategoryPolicy
         $need_permissoin = 'category:can-edit';
        # is user Admin?
        # is this user added this category?
-       if( $user->isadmin || $user->id === $category->added_by )
+       if( $user->isadmin || $user->is_super_admin || $user->id === $category->added_by )
        {                 
          return true;
        }
