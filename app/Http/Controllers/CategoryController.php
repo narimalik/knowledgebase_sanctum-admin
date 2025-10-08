@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Algolia\AlgoliaSearch\Api\SearchClient;
 use App\Http\Resources\CategoryCollection;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
@@ -15,6 +16,10 @@ use DB;
 use Illuminate\Auth\Access\AuthorizationException;
 
 use function PHPUnit\Framework\isNull;
+
+
+
+
 
 class CategoryController extends Controller
 {
@@ -60,6 +65,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
+
+
 
         $category= new Category(); 
 
