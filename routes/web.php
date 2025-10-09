@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/algolia', function(){
+    
     #Artisan::call('scout:import "App\Models\Category"');
     Category::all()->searchable();
     
