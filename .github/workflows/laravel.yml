@@ -33,6 +33,8 @@ jobs:
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite
       run: php artisan test
+    - name: Clear FTP deploy cashe
+      run: rm -f .ftp-deploy-sync-state.json
     - name: FTP-Deploy-Action
       uses: Samkirkland/FTP-Deploy-Action@4.0.0
       with:
