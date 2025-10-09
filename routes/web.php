@@ -4,6 +4,8 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
 use App\Models\Article;
+use App\Models\Category;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,6 +18,11 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::get('/algolia', function(){
+    #Artisan::call('scout:import "App\Models\Category"');
+    Category::all()->searchable();
+    
+});
 
 
 Route::post('/dologin',[ UserController::class , 'login'])->name('dologin');

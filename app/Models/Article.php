@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class Article extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
 
     protected $fillable = [
         'article_title',
@@ -17,6 +18,16 @@ class Article extends Model
         'added_by',
         'updated_by',
     ];
+
+     // Algolia
+     public function toSearchableArray()
+     {
+         return [
+            'article_title'=> $this->article_title,
+            'article_sub_title'=>$this->article_sub_title,
+            'detail'=>$this->detail
+         ];
+     }
 
 
     public function categories()
